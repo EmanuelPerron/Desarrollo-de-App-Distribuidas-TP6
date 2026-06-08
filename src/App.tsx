@@ -1,140 +1,75 @@
-import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react'
-
-type Task = {
-  id: string
-  title: string
-  completed: boolean
-}
-
-const STORAGE_KEY = 'tp6-tasks'
+import React, { useState, useEffect } from 'react'
+import { Antenna, Alert } from './types'
+import { generateAntennas, simulateAntennasUpdate, generateAlerts } from './utils/dataSimulation'
+import NOCView from './components/NOCView'
+import FieldView from './components/FieldView'
+import './components/App.css'
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [newTask, setNewTask] = useState('')
-  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const [userRole, setUserRole] = useState<'admin' | 'field'>('admin')
+  const [antennas, setAntennas] = useState<Antenna[]>(generateAntennas())
+  const [alerts, setAlerts] = useState<Alert[]>(generateAlerts(antennas))
+  const [selectedAntenna, setSelectedAntenna] = useState<string | null>(null)
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      try {
-        setTasks(JSON.parse(stored) as Task[])
-      } catch {
-        localStorage.removeItem(STORAGE_KEY)
-      }
-    }
+    const interval = setInterval(() => {
+      setAntennas(prev => {
+        const updated = simulateAntennasUpdate(prev)
+        setAlerts(generateAlerts(updated))
+        return updated
+      })
+    }, 5000)
+
+    return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
-  }, [tasks])
-
-  const filteredTasks = useMemo(() => {
-    return tasks.filter((task) => {
-      if (filter === 'active') return !task.completed
-      if (filter === 'completed') return task.completed
-      return true
-    })
-  }, [filter, tasks])
-
-  const handleAddTask = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const title = newTask.trim()
-    if (!title) return
-
-    setTasks((current) => [
-      ...current,
-      { id: crypto.randomUUID(), title, completed: false }
-    ])
-    setNewTask('')
-  }
-
-  const handleChangeTask = (taskId: string) => {
-    setTasks((current) =>
-      current.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      )
-    )
-  }
-
-  const handleDeleteTask = (taskId: string) => {
-    setTasks((current) => current.filter((task) => task.id !== taskId))
-  }
-
-  const handleNewTaskChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setNewTask(event.target.value)
-  }
-
   return (
-    <div className="app-shell">
-      <div className="card">
-        <header>
-          <h1>Trabajo Práctico TP6</h1>
-          <p>Aplicación de lista de tareas con filtros y persistencia local.</p>
-        </header>
-
-        <form className="task-form" onSubmit={handleAddTask}>
-          <input
-            value={newTask}
-            onChange={handleNewTaskChange}
-            placeholder="Agregar nueva tarea"
-            aria-label="Nueva tarea"
-          />
-          <button type="submit">Agregar</button>
-        </form>
-
-        <div className="filters">
+    <div className="app-container">
+      <header className="app-header">
+        <div className="header-content">
+          <h1>AntenaWatch 3G</h1>
+          <p>Monitoreo en Tiempo Real de Antenas de Red Móvil</p>
+        </div>
+        <div className="role-switcher">
           <button
-            className={filter === 'all' ? 'active' : ''}
-            onClick={() => setFilter('all')}
-            type="button"
+            className={`role-btn ${userRole === 'admin' ? 'active' : ''}`}
+            onClick={() => {
+              setUserRole('admin')
+              setSelectedAntenna(null)
+            }}
           >
-            Todas
+            Vista NOC (Admin)
           </button>
           <button
-            className={filter === 'active' ? 'active' : ''}
-            onClick={() => setFilter('active')}
-            type="button"
+            className={`role-btn ${userRole === 'field' ? 'active' : ''}`}
+            onClick={() => setUserRole('field')}
           >
-            Activas
-          </button>
-          <button
-            className={filter === 'completed' ? 'active' : ''}
-            onClick={() => setFilter('completed')}
-            type="button"
-          >
-            Completadas
+            Vista Campo (Ingeniero)
           </button>
         </div>
+      </header>
 
-        <ul className="task-list">
-          {filteredTasks.length === 0 ? (
-            <li className="empty-state">No hay tareas.</li>
-          ) : (
-            filteredTasks.map((task) => (
-              <li key={task.id} className={task.completed ? 'completed' : ''}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={task.completed}
-                    onChange={() => handleChangeTask(task.id)}
-                  />
-                  <span>{task.title}</span>
-                </label>
-                <button onClick={() => handleDeleteTask(task.id)} type="button">
-                  Eliminar
-                </button>
-              </li>
-            ))
-          )}
-        </ul>
-
-        <footer>
-          <p>
-            Total: <strong>{tasks.length}</strong> · Completadas:{' '}
-            <strong>{tasks.filter((task) => task.completed).length}</strong>
-          </p>
-        </footer>
-      </div>
+      <main className="app-main">
+        {userRole === 'admin' ? (
+          <NOCView
+            antennas={antennas}
+            alerts={alerts}
+            onSelectAntenna={setSelectedAntenna}
+            onAlertStatusChange={(alertId: string, status: any) => {
+              setAlerts(prev =>
+                prev.map(a => (a.id === alertId ? { ...a, status } : a))
+              )
+            }}
+          />
+        ) : (
+          <FieldView
+            antennas={antennas}
+            alerts={alerts}
+            selectedAntennaId={selectedAntenna}
+            onSelectAntenna={setSelectedAntenna}
+          />
+        )}
+      </main>
     </div>
   )
 }

@@ -1,0 +1,32 @@
+.noc-view {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.noc-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.noc-left,
+.noc-right {
+  background: #1e293b;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid #334155;
+}
+
+.noc-left h2,
+.noc-right h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #e2e8f0;
+}
+
+@media (max-width: 1024px) {
+  .noc-content {
+    grid-template-columns: 1fr;
+  }
+}

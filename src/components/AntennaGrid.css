@@ -1,0 +1,84 @@
+.antenna-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.antenna-item {
+  background: #0f172a;
+  border: 2px solid #334155;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  position: relative;
+}
+
+.antenna-item:hover {
+  transform: translateY(-2px);
+  border-color: #2563eb;
+}
+
+.antenna-item.active {
+  background: #1e3a8a;
+  border-color: #2563eb;
+}
+
+.antenna-item.degraded {
+  border-color: #f59e0b;
+}
+
+.antenna-item.critical {
+  border-color: #ef4444;
+  background: #7f1d1d;
+}
+
+.antenna-item.offline {
+  border-color: #6b7280;
+  opacity: 0.6;
+}
+
+.antenna-status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.antenna-item.active .antenna-status-indicator {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.antenna-item.degraded .antenna-status-indicator {
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+}
+
+.antenna-item.critical .antenna-status-indicator {
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+
+.antenna-item.offline .antenna-status-indicator {
+  background: #6b7280;
+}
+
+.antenna-id {
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 0.5rem;
+}
+
+.antenna-info {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.antenna-rssi,
+.antenna-temp {
+  margin: 0.25rem 0;
+}

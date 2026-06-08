@@ -1,37 +1,52 @@
-# Trabajo Práctico TP6
+# AntenaWatch 3G
 
-Aplicación web simple de lista de tareas creada con React y Vite.
+Plataforma de monitoreo en tiempo real de antenas de red móvil 3G.
 
 ## Características
 
-- Agregar tareas
-- Marcar tareas como completadas
-- Eliminar tareas
-- Filtrar tareas: todas, activas, completadas
-- Persistencia usando `localStorage`
+### Vista NOC (Administrador)
+- **Mapa de Antenas**: Visualización en cuadrícula con codificación de colores por estado
+- **Panel de Alertas**: Lista cronológica de eventos clasificados por severidad
+- **KPIs Globales**: RSSI promedio, tráfico total, temperatura promedio, disponibilidad
+- **Gestión de Incidencias**: Marcar alertas como "en atención" o "resuelta"
 
-## Comandos
+### Vista de Campo (Ingeniero)
+- **Ficha Técnica**: Identificador, nombre, ubicación, tecnología, uptime
+- **Métricas Individuales**: RSSI, tráfico, temperatura, voltaje
+- **Gráficas Históricas**: Líneas de tiempo de últimas 24h (RSSI y throughput)
+- **Historial de Eventos**: Últimos 10 eventos de la antena
 
-- `npm install` - instalar dependencias
-- `npm run dev` - levantar servidor de desarrollo
-- `npm run build` - generar build de producción
-- `npm run preview` - previsualizar el build
+## Capacidades del Sistema
+- **Simulación de Datos**: Datos aleatorios realistas actualizados cada 5 segundos
+- **Alertas Automáticas**: Se activan cuando se superan umbrales (T>55°C, RSSI<-80dBm)
+- **Dos Roles de Usuario**: Administrador NOC e Ingeniero de Campo
+- **Interfaz Responsiva**: Funciona en desktop, tablet y móvil
 
-## Despliegue
+## Instalación
 
-Esta app está lista para desplegar en Vercel. Para desplegar:
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
 
-1. Instalar Vercel CLI si aún no lo tienes:
-   ```bash
-   npm install -g vercel
-   ```
-2. Iniciar sesión o vincular tu cuenta:
-   ```bash
-   vercel login
-   ```
-3. Desplegar en producción:
-   ```bash
-   vercel --prod
-   ```
+## Build para Producción
 
-> También puede desplegarse con Netlify o cualquier otro servicio de hosting de sitios estáticos.
+\`\`\`bash
+npm run build
+npm run preview
+\`\`\`
+
+## Despliegue en Vercel
+
+Ya está configurado. Solo necesita:
+
+\`\`\`bash
+vercel --prod
+\`\`\`
+
+## Tecnología
+
+- React 18 + TypeScript
+- Vite
+- CSS personalizado
+- Datos simulados en tiempo real
