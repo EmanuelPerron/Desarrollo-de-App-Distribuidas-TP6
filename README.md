@@ -22,28 +22,6 @@ Plataforma de monitoreo en tiempo real de antenas de red móvil 3G.
 - **Dos Roles de Usuario**: Administrador NOC e Ingeniero de Campo
 - **Interfaz Responsiva**: Funciona en desktop, tablet y móvil
 
-## Instalación
-
-\`\`\`bash
-npm install
-npm run dev
-\`\`\`
-
-## Build para Producción
-
-\`\`\`bash
-npm run build
-npm run preview
-\`\`\`
-
-## Despliegue en Vercel
-
-Ya está configurado. Solo necesita:
-
-\`\`\`bash
-vercel --prod
-\`\`\`
-
 ## Tecnología
 
 - React 18 + TypeScript
